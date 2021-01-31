@@ -7,6 +7,10 @@ import {
 } from 'reactstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { v4 as uuid } from 'uuid';
+import { connect } from 'react-redux'
+import { getItems } from '../actions/itemAction'
+
+const mapDispatch = { getItems }
 
 function ShoppingList(props) {
   const [items, setItems] = useState([
@@ -15,6 +19,10 @@ function ShoppingList(props) {
     { id: uuid(), name: 'Steak' },
     { id: uuid(), name: 'Water' }
   ]);
+
+  useEffect(() => {
+    props.getItems()
+  }, []);
 
   const handleClick = () => {
     const name = prompt('Enter Item')
@@ -29,7 +37,7 @@ function ShoppingList(props) {
     setItems(items.filter(item => item.id !== id))
   }
 
-  console.log(items)
+  console.log(props.item)
   return (
     <div>
       <Container>
@@ -67,4 +75,8 @@ function ShoppingList(props) {
   )
 }
 
-export default ShoppingList
+const mapStateToProps = (state) => ({
+  item: state.item
+})
+
+export default connect(mapStateToProps, mapDispatch)(ShoppingList)
